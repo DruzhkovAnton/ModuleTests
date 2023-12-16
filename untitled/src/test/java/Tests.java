@@ -1,9 +1,12 @@
 import edu.innotech.Student;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
+
 import java.util.List;
+
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class Tests {
     private Student student;
@@ -15,9 +18,24 @@ public class Tests {
 
     @Test
     public void testAddValidGrade() {
-        student.addGrade(4);
+        StudentCheckGradeMock mock = new StudentCheckGradeMock();
+        mock.setupServer();
+        mock.setupStubs();
+        Student student = new Student("Doe");
+        student.addGrade(100);
         assertEquals(1, student.getGrades().size());
-        assertEquals(Integer.valueOf(4), student.getGrades().get(0));
+        mock.stopServer();
+    }
+
+    @Test
+    public void testAddInValidGrade() {
+        StudentCheckGradeMock mock = new StudentCheckGradeMock();
+        mock.setupServer();
+        mock.setupStubs();
+        Student student = new Student("Doe");
+        assertThrows(IllegalArgumentException.class, () -> student.addGrade(101));
+        assertTrue(student.getGrades().isEmpty());
+        mock.stopServer();
     }
 
     @Test(expected = IllegalArgumentException.class)
