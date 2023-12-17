@@ -14,10 +14,21 @@ import java.util.List;
 import java.util.Objects;
 
 public class Student {
+    private int id;
     private String name;
     private List grades= new ArrayList<>();
+    private List<Integer> marks;
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public Student(String name) {
+        this.name = name;
+    }
+    public Student() {
         this.name = name;
     }
 
@@ -33,17 +44,18 @@ public class Student {
         return  Collections.unmodifiableList(grades); // исправляем инкапсуляцию
     }
 
+    public List<Integer> getMarks() {
+        return marks;
+    }
+
+    public void setMarks(List<Integer> marks) {
+        this.marks = marks;
+    }
+
     @SneakyThrows
     public void addGrade(int grade) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet request = new HttpGet("http://localhost:5352/checkGrade?grade="+grade);
-        CloseableHttpResponse httpResponse = httpClient.execute(request);
-        HttpEntity entity = httpResponse.getEntity();
-        if(!Boolean.parseBoolean(EntityUtils.toString(entity))){
-            throw new IllegalArgumentException(grade + " is wrong grade");
-        }
-        //if (grade < 2 || grade > 5) {
-        //    throw new IllegalArgumentException(grade + " is wrong grade");}
+        if (grade < 2 || grade > 5) {
+        throw new IllegalArgumentException(grade + " is wrong grade");}
         grades.add(grade);
     }
 
